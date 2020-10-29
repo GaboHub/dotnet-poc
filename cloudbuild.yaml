@@ -1,0 +1,13 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '--tag=gcr.io/$PROJECT_ID/dotnet-poc', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/dotnet-poc']
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |
+      gcloud run deploy dotnet-poc --image=gcr.io/$PROJECT_ID/dotnet-poc:lastest --region=us-central1 \
+      --platform=managed --allow-unauthenticated --max-instances=1 --memory=128Mi
+images: ['gcr.io/$PROJECT_ID/dotnet-poc']
